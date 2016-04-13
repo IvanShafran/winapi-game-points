@@ -19,8 +19,13 @@ protected:
 	void OnSetFocus();
 	void OnDestroy();
 	void OnCommand(WPARAM wParam, LPARAM lParam);
-	bool OnClose();
 private:
 	HINSTANCE hInstance;
 	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+
+	bool OnClose();
+	bool writeGameToFile();
+
+	//game
+	bool gameStarted = true;
 };

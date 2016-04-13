@@ -1,6 +1,7 @@
 #include "COverlappedWindow.h"
 #include <Windows.h>
 #include <iostream>
+#include "resource.h"
 
 COverlappedWindow::COverlappedWindow()
 {
@@ -100,10 +101,42 @@ void COverlappedWindow::OnSetFocus() {
 }
 
 bool COverlappedWindow::OnClose() {
-	return true;
+	if (!gameStarted) {
+		return true;
+	}
+
+	int msgboxID = MessageBox(
+		NULL,
+		(LPCWSTR)L"Сохранить игру?",
+		(LPCWSTR)L"Выход из игры",
+		MB_ICONWARNING | MB_YESNOCANCEL | MB_DEFBUTTON3
+		);
+
+	bool exit;
+	switch (msgboxID)
+	{
+	case IDYES:
+	{
+		exit = true;
+		break;
+	}
+	case IDNO:
+		exit = true;
+		break;
+	case IDCANCEL:
+		exit = false;
+		break;
+	}
+
+	return exit;
 }
 
 void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
+	switch (LOWORD(wParam)) {
+	case ID_EXIT:
+		::PostMessage(handle, WM_CLOSE, (WPARAM)0, (LPARAM)0);
+		break;
+	}
 }
 
 void COverlappedWindow::OnDestroy()
