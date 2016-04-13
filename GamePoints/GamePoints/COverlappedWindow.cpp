@@ -59,7 +59,7 @@ bool COverlappedWindow::RegisterClass(HINSTANCE instance)
 
 	::ZeroMemory(&windowClass, sizeof(windowClass));
 	windowClass.cbSize = sizeof(WNDCLASSEX);
-	windowClass.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW;
+	windowClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowClass.lpfnWndProc = COverlappedWindow::windowProc;
 	windowClass.hIcon;
 	windowClass.hInstance = instance;
@@ -77,7 +77,7 @@ bool COverlappedWindow::Create(HINSTANCE instance)
 	COverlappedWindow::handle = ::CreateWindowEx(0,
 		L"COverlappedWindow",
 		L"GamePoints",
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW&~WS_THICKFRAME&~WS_MAXIMIZEBOX,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
