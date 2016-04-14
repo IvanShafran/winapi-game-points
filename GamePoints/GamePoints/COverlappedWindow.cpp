@@ -1,7 +1,10 @@
+#pragma once
+
 #include "COverlappedWindow.h"
 #include <Windows.h>
 #include <iostream>
 #include "resource.h"
+#include "Game.h"
 
 COverlappedWindow::COverlappedWindow()
 {
@@ -101,7 +104,7 @@ void COverlappedWindow::OnSetFocus() {
 }
 
 bool COverlappedWindow::OnClose() {
-	if (!gameStarted) {
+	if (!isGameStarted) {
 		return true;
 	}
 

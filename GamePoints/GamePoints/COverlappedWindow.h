@@ -1,4 +1,7 @@
+#pragma once
+
 #include <Windows.h>
+#include "Game.h"
 
 class COverlappedWindow {
 public:
@@ -27,5 +30,24 @@ private:
 	bool writeGameToFile();
 
 	//game
-	bool gameStarted = true;
+	bool isGameStarted = true;
+	Game game;
+
+	//game drawing
+	int lineStroke = 2;
+	int lineStrokeMin = 2;
+	int lineStrokeMax = 2;
+
+	int lineDistance = 30;
+	int lineDistanceMin = 30;
+	int lineDistanceMax = 30;
+
+	int pointRadius = 10;
+	int pointRadiusMin = 10;
+	int pointRadiusMax = 10;
+
+	COLORREF lineColor = RGB(0, 0, 0);
+	COLORREF firstPlayerColor = RGB(0, 255, 255);
+	COLORREF secondPlayerColor = RGB(255, 255, 0);
+	COLORREF backgroundColor = RGB(255, 255, 255);
 };
