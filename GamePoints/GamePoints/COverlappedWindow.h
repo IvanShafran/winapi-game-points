@@ -3,6 +3,26 @@
 #include <Windows.h>
 #include "Game.h"
 
+struct DrawInfo {
+	int lineStroke;
+	int lineIndent;
+	int pointRadius;
+	COLORREF lineColor = RGB(0, 0, 0);
+	COLORREF firstPlayerColor = RGB(255, 0, 0);
+	COLORREF secondPlayerColor = RGB(0, 0, 255);
+	COLORREF playerPenColor = RGB(0, 0, 0);
+	COLORREF innerFirstColor = RGB(0, 0, 0);
+	COLORREF innerSecondColor = RGB(0, 0, 0);
+	COLORREF innerColor = RGB(0, 0, 0);
+	COLORREF backgroundColor = RGB(255, 255, 255);
+};
+
+struct GameInfo {
+	int widthGridNumber = 5;
+	int heightGridNumber = 5;
+	bool isFirstNextStep = true;
+};
+
 class COverlappedWindow {
 public:
 	COverlappedWindow();
@@ -18,10 +38,9 @@ public:
 	HWND handle;
 protected:
 	void OnCreate(HWND handle);
-	void OnSize(LPARAM lParam);
-	void OnSetFocus();
 	void OnDestroy();
 	void OnCommand(WPARAM wParam, LPARAM lParam);
+	void OnPaint();
 private:
 	HINSTANCE hInstance;
 	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
@@ -29,25 +48,17 @@ private:
 	bool OnClose();
 	bool writeGameToFile();
 
+	void drawGame(HDC paintDC, const RECT& rect);
+	void COverlappedWindow::drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state);
+	void COverlappedWindow::drawGrid(HDC paintDC, const RECT& rect);
+	void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect);
+	void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect);
+	DrawInfo COverlappedWindow::getDrawInfo();
+	GameInfo COverlappedWindow::getGameInfo();
 	//game
-	bool isGameStarted = true;
+	bool isGameStarted = false;
+	bool isSettingsPreview = false;
 	Game game;
-
-	//game drawing
-	int lineStroke = 2;
-	int lineStrokeMin = 2;
-	int lineStrokeMax = 2;
-
-	int lineDistance = 30;
-	int lineDistanceMin = 30;
-	int lineDistanceMax = 30;
-
-	int pointRadius = 10;
-	int pointRadiusMin = 10;
-	int pointRadiusMax = 10;
-
-	COLORREF lineColor = RGB(0, 0, 0);
-	COLORREF firstPlayerColor = RGB(0, 255, 255);
-	COLORREF secondPlayerColor = RGB(255, 255, 0);
-	COLORREF backgroundColor = RGB(255, 255, 255);
+	DrawInfo applyedDrawInfo, settingsDrawInfo, minSettings, maxSettings;
+	GameInfo applyedGameInfo, settingsGameInfo, minGameInfo, maxGameInfo;
 };

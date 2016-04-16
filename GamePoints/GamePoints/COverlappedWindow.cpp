@@ -8,53 +8,29 @@
 
 COverlappedWindow::COverlappedWindow()
 {
+	applyedDrawInfo.lineStroke = 2;
+	applyedDrawInfo.lineIndent = 40;
+	applyedDrawInfo.pointRadius = 8;
+	settingsDrawInfo = applyedDrawInfo;
+	
+	minSettings.lineStroke = 0;
+	minSettings.lineIndent = 10;
+	minSettings.pointRadius = 2;
 
+	maxSettings.lineStroke = 5;
+	maxSettings.lineIndent = 100;
+	maxSettings.pointRadius = 10;
+
+	minGameInfo.heightGridNumber = 4;
+	minGameInfo.widthGridNumber = 4;
+
+	maxGameInfo.heightGridNumber = 50;
+	maxGameInfo.widthGridNumber = 50;
 }
 
 COverlappedWindow::~COverlappedWindow()
 {
 
-}
-
-LRESULT __stdcall COverlappedWindow::windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	if (message == WM_ERASEBKGND) {
-		return true;
-	}
-
-	if (message == WM_NCCREATE) {
-		COverlappedWindow* window = reinterpret_cast<COverlappedWindow*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
-		::SetWindowLongPtr(handle, GWLP_USERDATA, reinterpret_cast<LONG>(window));
-	}
-	else {
-		COverlappedWindow* window = reinterpret_cast<COverlappedWindow*>(::GetWindowLongPtr(handle, GWLP_USERDATA));
-		switch (message) {
-		case WM_CREATE:
-			window->OnCreate(handle);
-			break;
-		case WM_SIZE:
-			window->OnSize(lParam);
-			break;
-		case WM_SETFOCUS:
-			window->OnSetFocus();
-			break;
-		case WM_COMMAND:
-			window->OnCommand(wParam, lParam);
-			break;
-		case WM_CLOSE:
-			if (!window->OnClose()) {
-				return 0;
-			}
-			break;
-		case WM_DESTROY:
-			window->OnDestroy();
-			break;
-		default:
-			break;
-		}
-	}
-
-	return DefWindowProc(handle, message, wParam, lParam);
 }
 
 bool COverlappedWindow::RegisterClass(HINSTANCE instance)
@@ -94,13 +70,157 @@ bool COverlappedWindow::Create(HINSTANCE instance)
 	return COverlappedWindow::handle != 0;
 }
 
+LRESULT __stdcall COverlappedWindow::windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if (message == WM_ERASEBKGND) {
+		return true;
+	}
+
+	if (message == WM_NCCREATE) {
+		COverlappedWindow* window = reinterpret_cast<COverlappedWindow*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+		::SetWindowLongPtr(handle, GWLP_USERDATA, reinterpret_cast<LONG>(window));
+	}
+	else {
+		COverlappedWindow* window = reinterpret_cast<COverlappedWindow*>(::GetWindowLongPtr(handle, GWLP_USERDATA));
+		switch (message) {
+		case WM_CREATE:
+			window->OnCreate(handle);
+			break;
+		case WM_PAINT:
+			window->OnPaint();
+			break;
+		case WM_COMMAND:
+			window->OnCommand(wParam, lParam);
+			break;
+		case WM_CLOSE:
+			if (!window->OnClose()) {
+				return 0;
+			}
+			break;
+		case WM_DESTROY:
+			window->OnDestroy();
+			break;
+		default:
+			break;
+		}
+	}
+
+	return DefWindowProc(handle, message, wParam, lParam);
+}
+
+void COverlappedWindow::OnPaint() {
+	PAINTSTRUCT paintStruct;
+	HDC paintDC = ::BeginPaint(handle, &paintStruct);
+	RECT rect;
+	::GetClientRect(handle, &rect);
+
+	COverlappedWindow::drawGame(paintDC, rect);
+
+	::EndPaint(handle, &paintStruct);
+}
+
+DrawInfo COverlappedWindow::getDrawInfo() {
+	if (isSettingsPreview) {
+		return settingsDrawInfo;
+	} else {
+		return applyedDrawInfo;
+	}
+}
+
+GameInfo COverlappedWindow::getGameInfo() {
+	if (isSettingsPreview) {
+		return settingsGameInfo;
+	}
+	else {
+		return applyedGameInfo;
+	}
+}
+
+void COverlappedWindow::drawGame(HDC paintDC, const RECT& rect) {
+	drawBackground(paintDC, rect);
+	drawGrid(paintDC, rect);
+	drawPoints(paintDC, rect);
+}
+
+void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect) {
+	HBRUSH brush = CreateSolidBrush(getDrawInfo().backgroundColor);
+	::FillRect(paintDC, &rect, brush);
+	::DeleteObject(brush);
+}
+
+BOOL Line(HDC hdc, int x1, int y1, int x2, int y2)
+{
+	::MoveToEx(hdc, x1, y1, NULL);
+	return ::LineTo(hdc, x2, y2);
+}
+
+void COverlappedWindow::drawGrid(HDC paintDC, const RECT& rect) {
+	HBRUSH brush = ::CreateSolidBrush(getDrawInfo().lineColor);
+	HPEN pen = ::CreatePen(PS_SOLID, getDrawInfo().lineStroke, getDrawInfo().lineColor);
+	::SelectObject(paintDC, pen);
+	::SelectObject(paintDC, brush);
+
+	int indent = getDrawInfo().lineIndent;
+	int widthNumber = getGameInfo().widthGridNumber;
+	int heightNumber = getGameInfo().heightGridNumber;
+	for (int i = 0; i < widthNumber; ++i) {
+		Line(paintDC, (i + 1) * indent, 0, (i + 1) * indent, (heightNumber + 1) * indent);
+	}
+
+	for (int i = 0; i < heightNumber; ++i) {
+		Line(paintDC, 0, (i + 1) * indent, (widthNumber + 1) * indent, (i + 1) * indent);
+	}
+
+	::DeleteObject(brush);
+	::DeleteObject(pen);
+}
+
+void COverlappedWindow::drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state) {
+	HBRUSH brush;
+	switch (state)
+	{
+	case FIRST_PLAYER:
+		brush = ::CreateSolidBrush(getDrawInfo().firstPlayerColor);
+		break;
+	case SECOND_PLAYER:
+		brush = ::CreateSolidBrush(getDrawInfo().secondPlayerColor);
+		break;
+	case INNER:
+		brush = ::CreateSolidBrush(getDrawInfo().innerColor);
+		break;
+	case INNER_FIRST:
+		brush = ::CreateSolidBrush(getDrawInfo().innerFirstColor);
+		break;
+	case INNER_SECOND:
+		brush = ::CreateSolidBrush(getDrawInfo().innerSecondColor);
+		break;
+	default:
+		brush = ::CreateSolidBrush(getDrawInfo().innerColor);
+		break;
+	}
+
+	HPEN pen = ::CreatePen(PS_SOLID, getDrawInfo().lineStroke, getDrawInfo().playerPenColor);
+	::SelectObject(paintDC, pen);
+	::SelectObject(paintDC, brush);
+	
+	int indent = getDrawInfo().lineIndent;
+	int radius = getDrawInfo().pointRadius;
+	int x1 = (x_num + 1) * indent - radius; 
+	int y1 = (y_num + 1) * indent - radius;
+	int x2 = (x_num + 1) * indent + radius;
+	int y2 = (y_num + 1) * indent + radius;
+
+	::Ellipse(paintDC, x1, y1, x2, y2);
+
+	::DeleteObject(brush);
+	::DeleteObject(pen);
+}
+
+void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect) {
+	drawPoint(paintDC, rect, 1, 3, SECOND_PLAYER);
+}
+
 void COverlappedWindow::OnCreate(HWND handle) {
-}
-
-void COverlappedWindow::OnSize(LPARAM lParam) {
-}
-
-void COverlappedWindow::OnSetFocus() {
 }
 
 bool COverlappedWindow::OnClose() {

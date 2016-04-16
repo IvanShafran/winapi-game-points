@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 enum PointState {
-	EMPTY, FIRST_PLAYER, SECOND_PLAYER, INNER
+	EMPTY, FIRST_PLAYER, SECOND_PLAYER, INNER_FIRST, INNER_SECOND, INNER
 };
 
 struct Point {
@@ -203,15 +203,20 @@ public:
 	void updateInner() {
 		for (int x = 0; x < widthCount; ++x) {
 			for (int y = 0; y < heightCount; ++y) {
-				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER) {
+				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER || points[x][y] == EMPTY) {
 					if (isItInner(x, y)) {
 						if (points[x][y] == FIRST_PLAYER) {
 							secondResult += 1;
-						} else {
+							points[x][y] = INNER_FIRST;
+						}
+						else if (points[x][y] == SECOND_PLAYER) {
 							firstResult += 1;
+							points[x][y] = INNER_SECOND;
+						}
+						else {
+							points[x][y] = INNER;
 						}
 
-						points[x][y] = INNER;
 					}
 				}
 			}
