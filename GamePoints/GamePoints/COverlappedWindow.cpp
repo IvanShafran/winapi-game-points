@@ -108,10 +108,31 @@ void COverlappedWindow::startNewGame() {
 	::SetWindowPos(handle, 0, x, y, 
 		(widthNumber + 1) * indent + unexpectedXIndent, 
 		(heightNumber + 1) * indent + unexpectedYIndent, SWP_SHOWWINDOW);
+
+	game = Game(getGameInfo().widthGridNumber, getGameInfo().heightGridNumber);
+	isGameStarted = true;
+	isDoneFirstStep = false;
+
+	::InvalidateRect(handle, 0, 0);
 }
 
 void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
+	if (!isPause) {
+		POINT pos;
+		GetCursorPos(&pos);
+		ScreenToClient(handle, &pos);
 
+		int indent = getDrawInfo().lineIndent;
+
+		int x_num = (pos.x - indent / 2) / indent;
+		int y_num = (pos.y - indent / 2) / indent;
+
+		if (game.markPoint(x_num, y_num, getGameInfo().isFirstNextStep)) {
+			getGameInfo().isFirstNextStep = !getGameInfo().isFirstNextStep;
+		}
+
+		::InvalidateRect(handle, 0, 0);
+	}
 }
 
 void COverlappedWindow::OnPaint() {
@@ -125,7 +146,7 @@ void COverlappedWindow::OnPaint() {
 	::EndPaint(handle, &paintStruct);
 }
 
-DrawInfo COverlappedWindow::getDrawInfo() {
+DrawInfo& COverlappedWindow::getDrawInfo() {
 	if (isSettingsPreview) {
 		return settingsDrawInfo;
 	} else {
@@ -133,7 +154,7 @@ DrawInfo COverlappedWindow::getDrawInfo() {
 	}
 }
 
-GameInfo COverlappedWindow::getGameInfo() {
+GameInfo& COverlappedWindow::getGameInfo() {
 	if (isSettingsPreview) {
 		return settingsGameInfo;
 	}
@@ -223,7 +244,15 @@ void COverlappedWindow::drawPoint(HDC paintDC, const RECT& rect, int x_num, int 
 }
 
 void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect) {
-	drawPoint(paintDC, rect, 1, 3, SECOND_PLAYER);
+	if (isGameStarted) {
+		for (int x = 0; x < getGameInfo().widthGridNumber; ++x) {
+			for (int y = 0; y < getGameInfo().heightGridNumber; ++y) {
+				if (game.getPointState(x, y) != EMPTY) {
+					drawPoint(paintDC, rect, x, y, game.getPointState(x, y));
+				}
+			}
+		}
+	}
 }
 
 void COverlappedWindow::OnCreate(HWND handle) {
@@ -252,7 +281,7 @@ void COverlappedWindow::OnCreate(HWND handle) {
 }
 
 bool COverlappedWindow::OnClose() {
-	if (!isGameStarted) {
+	if (!isDoneFirstStep) {
 		return true;
 	}
 

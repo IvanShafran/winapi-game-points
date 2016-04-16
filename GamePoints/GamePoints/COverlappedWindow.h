@@ -55,12 +55,14 @@ private:
 	void drawGrid(HDC paintDC, const RECT& rect);
 	void drawBackground(HDC paintDC, const RECT& rect);
 	void drawPoints(HDC paintDC, const RECT& rect);
-	DrawInfo getDrawInfo();
-	GameInfo getGameInfo();
+	DrawInfo& getDrawInfo();
+	GameInfo& getGameInfo();
 	
 	void startNewGame();
 	
 	bool isGameStarted = false;
+	bool isDoneFirstStep = false;
+	bool isPause = false;
 	bool isSettingsPreview = false;
 	Game game;
 	DrawInfo applyedDrawInfo, settingsDrawInfo, minSettings, maxSettings;

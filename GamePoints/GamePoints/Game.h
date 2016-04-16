@@ -157,6 +157,10 @@ public:
 		points = std::vector<std::vector<PointState>> (widthCount_, std::vector<PointState>(heightCount_, EMPTY));
 	}
 
+	PointState getPointState(int x, int y) const {
+		return points[x][y];
+	}
+
 	bool markPoint(int x, int y, bool firstPlayer) {
 		if (!isInField(x, y)) {
 			throw std::invalid_argument("Illegal arguments");
