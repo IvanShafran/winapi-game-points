@@ -18,8 +18,8 @@ struct DrawInfo {
 };
 
 struct GameInfo {
-	int widthGridNumber = 5;
-	int heightGridNumber = 5;
+	int widthGridNumber = 10;
+	int heightGridNumber = 10;
 	bool isFirstNextStep = true;
 };
 
@@ -41,21 +41,25 @@ protected:
 	void OnDestroy();
 	void OnCommand(WPARAM wParam, LPARAM lParam);
 	void OnPaint();
+	void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 private:
 	HINSTANCE hInstance;
 	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
 
 	bool OnClose();
+	
 	bool writeGameToFile();
 
 	void drawGame(HDC paintDC, const RECT& rect);
-	void COverlappedWindow::drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state);
-	void COverlappedWindow::drawGrid(HDC paintDC, const RECT& rect);
-	void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect);
-	void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect);
-	DrawInfo COverlappedWindow::getDrawInfo();
-	GameInfo COverlappedWindow::getGameInfo();
-	//game
+	void drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state);
+	void drawGrid(HDC paintDC, const RECT& rect);
+	void drawBackground(HDC paintDC, const RECT& rect);
+	void drawPoints(HDC paintDC, const RECT& rect);
+	DrawInfo getDrawInfo();
+	GameInfo getGameInfo();
+	
+	void startNewGame();
+	
 	bool isGameStarted = false;
 	bool isSettingsPreview = false;
 	Game game;

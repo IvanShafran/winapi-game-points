@@ -8,24 +8,6 @@
 
 COverlappedWindow::COverlappedWindow()
 {
-	applyedDrawInfo.lineStroke = 2;
-	applyedDrawInfo.lineIndent = 40;
-	applyedDrawInfo.pointRadius = 8;
-	settingsDrawInfo = applyedDrawInfo;
-	
-	minSettings.lineStroke = 0;
-	minSettings.lineIndent = 10;
-	minSettings.pointRadius = 2;
-
-	maxSettings.lineStroke = 5;
-	maxSettings.lineIndent = 100;
-	maxSettings.pointRadius = 10;
-
-	minGameInfo.heightGridNumber = 4;
-	minGameInfo.widthGridNumber = 4;
-
-	maxGameInfo.heightGridNumber = 50;
-	maxGameInfo.widthGridNumber = 50;
 }
 
 COverlappedWindow::~COverlappedWindow()
@@ -92,6 +74,9 @@ LRESULT __stdcall COverlappedWindow::windowProc(HWND handle, UINT message, WPARA
 		case WM_COMMAND:
 			window->OnCommand(wParam, lParam);
 			break;
+		case WM_LBUTTONDOWN:
+			window->OnLButtonDown(wParam, lParam);
+			break;
 		case WM_CLOSE:
 			if (!window->OnClose()) {
 				return 0;
@@ -106,6 +91,27 @@ LRESULT __stdcall COverlappedWindow::windowProc(HWND handle, UINT message, WPARA
 	}
 
 	return DefWindowProc(handle, message, wParam, lParam);
+}
+
+void COverlappedWindow::startNewGame() {
+	int indent = getDrawInfo().lineIndent;
+	int unexpectedXIndent = 20;
+	int unexpectedYIndent = 65;
+	int widthNumber = getGameInfo().widthGridNumber;
+	int heightNumber = getGameInfo().heightGridNumber;
+	
+	RECT rect;
+	GetWindowRect(handle, &rect);
+	int x = rect.left;
+	int y = rect.top;
+
+	::SetWindowPos(handle, 0, x, y, 
+		(widthNumber + 1) * indent + unexpectedXIndent, 
+		(heightNumber + 1) * indent + unexpectedYIndent, SWP_SHOWWINDOW);
+}
+
+void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
+
 }
 
 void COverlappedWindow::OnPaint() {
@@ -221,6 +227,28 @@ void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect) {
 }
 
 void COverlappedWindow::OnCreate(HWND handle) {
+	this->handle = handle;
+
+	applyedDrawInfo.lineStroke = 2;
+	applyedDrawInfo.lineIndent = 40;
+	applyedDrawInfo.pointRadius = 8;
+	settingsDrawInfo = applyedDrawInfo;
+
+	minSettings.lineStroke = 0;
+	minSettings.lineIndent = 10;
+	minSettings.pointRadius = 2;
+
+	maxSettings.lineStroke = 5;
+	maxSettings.lineIndent = 100;
+	maxSettings.pointRadius = 10;
+
+	minGameInfo.heightGridNumber = 4;
+	minGameInfo.widthGridNumber = 4;
+
+	maxGameInfo.heightGridNumber = 50;
+	maxGameInfo.widthGridNumber = 50;
+
+	startNewGame();
 }
 
 bool COverlappedWindow::OnClose() {
