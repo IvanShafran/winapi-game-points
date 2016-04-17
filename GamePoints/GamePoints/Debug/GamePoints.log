@@ -1,7 +1,9 @@
-﻿Build started 18.04.2016 1:08:48.
+﻿Build started 18.04.2016 1:22:33.
      1>Project "C:\Problems\winapi\final\winapi-game-points\GamePoints\GamePoints\GamePoints.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt COverlappedWindow.cpp COverlappedWindowDrawing.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt COverlappedWindow.cpp COverlappedWindowDrawing.cpp WinMain.cpp
+         WinMain.cpp
+     1>c:\problems\winapi\final\winapi-game-points\gamepoints\gamepoints\game.h(202): warning C4018: '<' : signed/unsigned mismatch
          COverlappedWindowDrawing.cpp
      1>c:\problems\winapi\final\winapi-game-points\gamepoints\gamepoints\game.h(202): warning C4018: '<' : signed/unsigned mismatch
          COverlappedWindow.cpp
@@ -12,9 +14,10 @@
          Debug\COverlappedWindow.obj
          Debug\COverlappedWindowDrawing.obj
          Debug\WinMain.obj
+         LINK : C:\Problems\winapi\final\winapi-game-points\GamePoints\Debug\GamePoints.exe not found or not built by the last incremental link; performing full link
          GamePoints.vcxproj -> C:\Problems\winapi\final\winapi-game-points\GamePoints\Debug\GamePoints.exe
      1>Done Building Project "C:\Problems\winapi\final\winapi-game-points\GamePoints\GamePoints\GamePoints.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.90
+Time Elapsed 00:00:03.75
