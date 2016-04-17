@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #pragma once
 
 #include "COverlappedWindow.h"
@@ -5,6 +7,8 @@
 #include <iostream>
 #include "resource.h"
 #include "Game.h"
+#include <string> 
+#include <cstring>
 
 COverlappedWindow::COverlappedWindow()
 {
@@ -93,21 +97,27 @@ LRESULT __stdcall COverlappedWindow::windowProc(HWND handle, UINT message, WPARA
 	return DefWindowProc(handle, message, wParam, lParam);
 }
 
-void COverlappedWindow::startNewGame() {
+void COverlappedWindow::setWindowSize() {
 	int indent = getDrawInfo().lineIndent;
 	int unexpectedXIndent = 20;
 	int unexpectedYIndent = 65;
 	int widthNumber = getGameInfo().widthGridNumber;
 	int heightNumber = getGameInfo().heightGridNumber;
-	
+	int scoreboardSize = getDrawInfo().scoreboardSize;
+
 	RECT rect;
 	GetWindowRect(handle, &rect);
 	int x = rect.left;
 	int y = rect.top;
 
-	::SetWindowPos(handle, 0, x, y, 
-		(widthNumber + 1) * indent + unexpectedXIndent, 
-		(heightNumber + 1) * indent + unexpectedYIndent, SWP_SHOWWINDOW);
+	::SetWindowPos(handle, 0, x, y,
+		(widthNumber + 1) * indent + unexpectedXIndent,
+		(heightNumber + 1) * indent + unexpectedYIndent + scoreboardSize, SWP_SHOWWINDOW);
+
+}
+
+void COverlappedWindow::startNewGame() {
+	setWindowSize();
 
 	game = Game(getGameInfo().widthGridNumber, getGameInfo().heightGridNumber);
 	isGameStarted = true;
@@ -124,11 +134,12 @@ void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
 
 		int indent = getDrawInfo().lineIndent;
 
-		int x_num = (pos.x - indent / 2) / indent;
-		int y_num = (pos.y - indent / 2) / indent;
+		int x_num = abs(pos.x - indent / 2) / indent;
+		int y_num = abs(pos.y - indent / 2) / indent;
 
-		if (game.markPoint(x_num, y_num, getGameInfo().isFirstNextStep)) {
+		if (game.isInField(x_num, y_num) && game.markPoint(x_num, y_num, getGameInfo().isFirstNextStep)) {
 			getGameInfo().isFirstNextStep = !getGameInfo().isFirstNextStep;
+			isDoneFirstStep = true;
 		}
 
 		::InvalidateRect(handle, 0, 0);
@@ -167,6 +178,7 @@ void COverlappedWindow::drawGame(HDC paintDC, const RECT& rect) {
 	drawBackground(paintDC, rect);
 	drawGrid(paintDC, rect);
 	drawPoints(paintDC, rect);
+	drawScoreboard(paintDC, rect);
 }
 
 void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect) {
@@ -253,6 +265,42 @@ void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect) {
 			}
 		}
 	}
+}
+
+std::wstring getWC(const char *c)
+{
+	const size_t cSize = strlen(c) + 1;
+	std::wstring wc(cSize, L'#');
+	mbstowcs(&wc[0], c, cSize);
+
+	return wc;
+}
+
+void setFont(HDC paintDC, int fontSize) {
+	HFONT font = CreateFont(fontSize, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, L"SYSTEM_FIXED_FONT");
+	::DeleteObject(::SelectObject(paintDC, font));
+}
+
+void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
+	setFont(paintDC, 30);
+
+	int indent = getDrawInfo().lineIndent;
+	int y = indent * (getGameInfo().heightGridNumber + 1) + getDrawInfo().scoreboardSize / 2;
+	int x = indent * (getGameInfo().widthGridNumber + 1) / 2;
+
+	int firstScore = 0;
+	int secondScore = 0;
+	if (isGameStarted) {
+		firstScore = game.getFirstResult();
+		secondScore = game.getSecondResult();
+	}
+
+	std::string string = "First player " + std::to_string(firstScore) +
+		":" + std::to_string(secondScore) + " Second player";
+	std::wstring str = getWC(string.c_str());
+	
+	::SetTextAlign(paintDC, TA_CENTER);
+	::TextOut(paintDC, x, y, str.c_str(), str.size());
 }
 
 void COverlappedWindow::OnCreate(HWND handle) {

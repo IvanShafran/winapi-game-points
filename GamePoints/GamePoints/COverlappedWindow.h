@@ -7,6 +7,7 @@ struct DrawInfo {
 	int lineStroke;
 	int lineIndent;
 	int pointRadius;
+	int scoreboardSize = 50;
 	COLORREF lineColor = RGB(0, 0, 0);
 	COLORREF firstPlayerColor = RGB(255, 0, 0);
 	COLORREF secondPlayerColor = RGB(0, 0, 255);
@@ -55,11 +56,13 @@ private:
 	void drawGrid(HDC paintDC, const RECT& rect);
 	void drawBackground(HDC paintDC, const RECT& rect);
 	void drawPoints(HDC paintDC, const RECT& rect);
+	void drawScoreboard(HDC paintDC, const RECT& rect);
 	DrawInfo& getDrawInfo();
 	GameInfo& getGameInfo();
 	
 	void startNewGame();
-	
+	void setWindowSize();
+
 	bool isGameStarted = false;
 	bool isDoneFirstStep = false;
 	bool isPause = false;

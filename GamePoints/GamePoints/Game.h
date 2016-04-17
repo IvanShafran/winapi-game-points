@@ -66,10 +66,6 @@ private:
 		}
 	}
 
-	bool isInField(int x, int y) {
-		return !(x < 0 || x > widthCount || y < 0 || y > heightCount);
-	}
-
 	bool isInField(Point point) {
 		return isInField(point.x, point.y);
 	}
@@ -155,6 +151,18 @@ public:
 	Game(int widthCount_, int heightCount_) : widthCount(widthCount_), heightCount(heightCount_) 
 	{
 		points = std::vector<std::vector<PointState>> (widthCount_, std::vector<PointState>(heightCount_, EMPTY));
+	}
+
+	int getFirstResult() const {
+		return firstResult;
+	}
+
+	int getSecondResult() const {
+		return secondResult;
+	}
+
+	bool isInField(int x, int y) {
+		return !(x < 0 || x >= widthCount || y < 0 || y >= heightCount);
 	}
 
 	PointState getPointState(int x, int y) const {
