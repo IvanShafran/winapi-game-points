@@ -44,6 +44,7 @@ void COverlappedWindow::drawGame(HDC paintDC, const RECT& rect) {
 	drawGrid(paintDC, rect);
 	drawPoints(paintDC, rect);
 	drawScoreboard(paintDC, rect);
+	drawEdges(paintDC, rect);
 }
 
 void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect) {
@@ -166,4 +167,39 @@ void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
 
 	::SetTextAlign(paintDC, TA_CENTER);
 	::TextOut(paintDC, x, y, str.c_str(), str.size());
+}
+
+void COverlappedWindow::drawEdge(HDC paintDC, const RECT& rect, const Edge& e) {
+	HBRUSH brush;
+	HPEN pen;
+	if (e.isFirstPlayer) {
+		brush = ::CreateSolidBrush(getDrawInfo().firstPlayerColor);
+		pen = ::CreatePen(PS_SOLID, getDrawInfo().lineStroke, getDrawInfo().firstPlayerColor);
+	} else {
+		brush = ::CreateSolidBrush(getDrawInfo().secondPlayerColor);
+		pen = ::CreatePen(PS_SOLID, getDrawInfo().lineStroke, getDrawInfo().secondPlayerColor);
+	}
+	
+	::SelectObject(paintDC, brush);
+	::SelectObject(paintDC, pen);
+
+	int indent = getDrawInfo().lineIndent;
+	int x1 = (e.start.x + 1) * indent;
+	int y1 = (e.start.y + 1)* indent;
+
+	int x2 = (e.end.x + 1) * indent;
+	int y2 = (e.end.y + 1) * indent;
+	
+	Line(paintDC, x1, y1, x2, y2);
+
+	::DeleteObject(brush);
+	::DeleteObject(pen);
+}
+
+void COverlappedWindow::drawEdges(HDC paintDC, const RECT& rect) {
+	if (isGameStarted) {
+		for (Edge e : game.getEdges()) {
+			drawEdge(paintDC, rect, e);
+		}
+	}
 }

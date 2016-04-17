@@ -57,6 +57,8 @@ private:
 	void drawBackground(HDC paintDC, const RECT& rect);
 	void drawPoints(HDC paintDC, const RECT& rect);
 	void drawScoreboard(HDC paintDC, const RECT& rect);
+	void drawEdge(HDC paintDC, const RECT& rect, const Edge& e);
+	void drawEdges(HDC paintDC, const RECT& rect);
 	DrawInfo& getDrawInfo();
 	GameInfo& getGameInfo();
 	

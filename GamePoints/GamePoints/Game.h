@@ -25,6 +25,7 @@ struct Edge {
 
 	Edge() {};
 	Edge(bool first, Point start, Point end) {
+		this->isFirstPlayer = first;
 		this->start = start;
 		this->end = end;
 	};
@@ -167,6 +168,10 @@ public:
 
 	PointState getPointState(int x, int y) const {
 		return points[x][y];
+	}
+
+	const std::vector<Edge>& getEdges() const {
+		return edges;
 	}
 
 	bool markPoint(int x, int y, bool firstPlayer) {

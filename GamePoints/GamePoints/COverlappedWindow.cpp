@@ -138,6 +138,7 @@ void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
 		if (game.isInField(x_num, y_num) && game.markPoint(x_num, y_num, getGameInfo().isFirstNextStep)) {
 			getGameInfo().isFirstNextStep = !getGameInfo().isFirstNextStep;
 			isDoneFirstStep = true;
+			game.buildGame();
 		}
 
 		::InvalidateRect(handle, 0, 0);
