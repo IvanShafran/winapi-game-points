@@ -14,7 +14,6 @@ COverlappedWindow::COverlappedWindow()
 
 COverlappedWindow::~COverlappedWindow()
 {
-
 }
 
 bool COverlappedWindow::RegisterClass(HINSTANCE instance)
@@ -158,13 +157,13 @@ void COverlappedWindow::OnCreate(HWND handle) {
 	applyedDrawInfo.pointRadius = 7;
 	settingsDrawInfo = applyedDrawInfo;
 
-	minSettings.lineStroke = 0;
+	minSettings.lineStroke = 1;
 	minSettings.lineIndent = 10;
-	minSettings.pointRadius = 2;
+	minSettings.pointRadius = 3;
 
-	maxSettings.lineStroke = 5;
+	maxSettings.lineStroke = 10;
 	maxSettings.lineIndent = 100;
-	maxSettings.pointRadius = 10;
+	maxSettings.pointRadius = 15;
 
 	minGameInfo.heightGridNumber = 4;
 	minGameInfo.widthGridNumber = 4;
@@ -232,23 +231,29 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 	case ID_HELP:
 		break;
 	case ID_SETTINGS:
-		//view
+		if (!isPause) {
+			OnViewSettings();
+			isPause = true;
+		}
 		break;
 	case ID_NEW_SMALL:
-		getGameInfo().heightGridNumber = 7;
-		getGameInfo().widthGridNumber = 7;
+		getGameInfo().heightGridNumber = 10;
+		getGameInfo().widthGridNumber = 10;
+		settingsGameInfo = applyedGameInfo;
 		getGameInfo().isFirstNextStep = true;
 		startNewGame();
 		break;
 	case ID_NEW_MEDIUM:
-		getGameInfo().heightGridNumber = 10;
-		getGameInfo().widthGridNumber = 10;
+		getGameInfo().heightGridNumber = 12;
+		getGameInfo().widthGridNumber = 12;
+		settingsGameInfo = applyedGameInfo;
 		getGameInfo().isFirstNextStep = true;
 		startNewGame();
 		break;
 	case ID_NEW_BIG:
-		getGameInfo().heightGridNumber = 12;
-		getGameInfo().widthGridNumber = 12;
+		getGameInfo().heightGridNumber = 15;
+		getGameInfo().widthGridNumber = 30;
+		settingsGameInfo = applyedGameInfo;
 		getGameInfo().isFirstNextStep = true;
 		startNewGame();
 		break;

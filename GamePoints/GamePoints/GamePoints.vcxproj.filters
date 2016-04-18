@@ -24,6 +24,9 @@
     <ClCompile Include="COverlappedWindowDrawing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="COverlappedWindowViewSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="COverlappedWindow.h">

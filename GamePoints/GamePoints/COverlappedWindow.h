@@ -37,6 +37,7 @@ public:
 
 	HACCEL haccel;
 	HWND handle;
+	HWND viewSettingsHandle;
 protected:
 	void OnCreate(HWND handle);
 	void OnDestroy();
@@ -46,7 +47,19 @@ protected:
 private:
 	HINSTANCE hInstance;
 	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+	
+	//dlg view
+	static BOOL __stdcall settingsViewProc(HWND settingsHandle, UINT message, WPARAM wParam, LPARAM lParam);
+	
+	void OnViewSettings();
+	void OnViewSettingsInit(HWND settingsHandle);
+	void OnViewSettingsOk(HWND settingsHandle);
+	void OnViewSettingsCancel(HWND settingsHandle);
+	void OnViewSettingsColor(HWND settingsHandle, UINT buttonID);
+	void OnViewSettingsScroll(HWND settingsHandle);
+	void OnViewSettingsCheck(HWND settingsHandle);
 
+	//game
 	bool OnClose();
 	bool COverlappedWindow::OnSaveDlg();
 
@@ -69,6 +82,7 @@ private:
 	bool isDoneFirstStep = false;
 	bool isPause = false;
 	bool isSettingsPreview = false;
+	bool isViewPreviewChecked = false;
 	Game game;
 	DrawInfo applyedDrawInfo, settingsDrawInfo, minSettings, maxSettings;
 	GameInfo applyedGameInfo, settingsGameInfo, minGameInfo, maxGameInfo;

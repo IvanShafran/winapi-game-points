@@ -11,6 +11,8 @@
 #include <cstring>
 
 void COverlappedWindow::OnPaint() {
+	setWindowSize();
+
 	PAINTSTRUCT paintStruct;
 	HDC paintDC = ::BeginPaint(handle, &paintStruct);
 	RECT rect;

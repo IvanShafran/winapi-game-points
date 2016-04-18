@@ -26,10 +26,8 @@ int startLoop(const COverlappedWindow& cWindow)
 			return -1;
 		}
 
-		if (!TranslateAccelerator(
-			cWindow.handle,  // handle to receiving window 
-			cWindow.haccel,    // handle to active accelerator table 
-			&msg))         // message data 
+		if (!TranslateAccelerator(cWindow.handle, cWindow.haccel, &msg) 
+			&& !::IsDialogMessage(cWindow.viewSettingsHandle, &msg))
 		{
 			::TranslateMessage(&msg);
 			::DispatchMessage(&msg);
