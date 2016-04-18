@@ -25,7 +25,7 @@ bool COverlappedWindow::RegisterClass(HINSTANCE instance)
 	windowClass.cbSize = sizeof(WNDCLASSEX);
 	windowClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowClass.lpfnWndProc = COverlappedWindow::windowProc;
-	windowClass.hIcon;
+	windowClass.hIcon = (HICON) ::LoadImage(instance, L"pain.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_SHARED);
 	windowClass.hInstance = instance;
 	windowClass.lpszClassName = L"COverlappedWindow";
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -144,7 +144,6 @@ void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
 			getGameInfo().isFirstNextStep = !getGameInfo().isFirstNextStep;
 			isDoneFirstStep = true;
 			game.buildGame();
-			game.updateInner();
 		}
 
 		::InvalidateRect(handle, 0, 0);
@@ -155,8 +154,8 @@ void COverlappedWindow::OnCreate(HWND handle) {
 	this->handle = handle;
 
 	applyedDrawInfo.lineStroke = 2;
-	applyedDrawInfo.lineIndent = 40;
-	applyedDrawInfo.pointRadius = 8;
+	applyedDrawInfo.lineIndent = 35;
+	applyedDrawInfo.pointRadius = 7;
 	settingsDrawInfo = applyedDrawInfo;
 
 	minSettings.lineStroke = 0;
@@ -222,9 +221,42 @@ bool COverlappedWindow::OnClose() {
 }
 
 void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
+	if (isPause) {
+		return;
+	}
+
 	switch (LOWORD(wParam)) {
 	case ID_EXIT:
 		::PostMessage(handle, WM_CLOSE, (WPARAM)0, (LPARAM)0);
+		break;
+	case ID_HELP:
+		break;
+	case ID_SETTINGS:
+		//view
+		break;
+	case ID_NEW_SMALL:
+		getGameInfo().heightGridNumber = 7;
+		getGameInfo().widthGridNumber = 7;
+		getGameInfo().isFirstNextStep = true;
+		startNewGame();
+		break;
+	case ID_NEW_MEDIUM:
+		getGameInfo().heightGridNumber = 10;
+		getGameInfo().widthGridNumber = 10;
+		getGameInfo().isFirstNextStep = true;
+		startNewGame();
+		break;
+	case ID_NEW_BIG:
+		getGameInfo().heightGridNumber = 12;
+		getGameInfo().widthGridNumber = 12;
+		getGameInfo().isFirstNextStep = true;
+		startNewGame();
+		break;
+	case ID_NEW_CUSTOM:
+		break;
+	case ID_GAME_LOAD:
+		break;
+	case ID_GAME_SAVE:
 		break;
 	}
 }

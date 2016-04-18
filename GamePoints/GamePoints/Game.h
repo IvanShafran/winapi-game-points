@@ -134,10 +134,6 @@ private:
 	}
 
 	bool isItInner(int x, int y, bool* isSurrounderFirst) {
-		if (inPath[x][y]) {
-			return false;
-		}
-
 		int intersectCountFirst = 0;
 		int intersectCountSecond = 0;
 
@@ -153,15 +149,51 @@ private:
 		}
 
 		if (intersectCountFirst % 2 == 1) {
+			if (inPath[x][y] && points[x][y] == FIRST_PLAYER) {
+				return false;
+			}
+
 			*isSurrounderFirst = true;
 			return true;
 		}
 		else if (intersectCountSecond % 2 == 1) {
+			if (inPath[x][y] && points[x][y] == SECOND_PLAYER) {
+				return false;
+			}
+
 			*isSurrounderFirst = false;
 			return true;
 		}
 
 		return false;
+	}
+
+	void updateInner() {
+		for (int x = 0; x < widthCount; ++x) {
+			for (int y = 0; y < heightCount; ++y) {
+				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER || points[x][y] == EMPTY) {
+					bool isSurrounderFirst;
+					if (isItInner(x, y, &isSurrounderFirst)) {
+						if (points[x][y] == FIRST_PLAYER) {
+							if (!isSurrounderFirst) {
+								secondResult += 1;
+							}
+							points[x][y] = INNER_FIRST;
+						}
+						else if (points[x][y] == SECOND_PLAYER) {
+							if (isSurrounderFirst) {
+								firstResult += 1;
+							}
+							points[x][y] = INNER_SECOND;
+						}
+						else {
+							points[x][y] = INNER;
+						}
+
+					}
+				}
+			}
+		}
 	}
 
 public:
@@ -233,33 +265,9 @@ public:
 				}
 			}
 		}
+
+		updateInner();
 	}
 
-	void updateInner() {
-		for (int x = 0; x < widthCount; ++x) {
-			for (int y = 0; y < heightCount; ++y) {
-				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER || points[x][y] == EMPTY) {
-					bool isSurrounderFirst;
-					if (isItInner(x, y, &isSurrounderFirst)) {
-						if (points[x][y] == FIRST_PLAYER) {
-							if (!isSurrounderFirst) {
-								secondResult += 1;
-							}
-							points[x][y] = INNER_FIRST;
-						}
-						else if (points[x][y] == SECOND_PLAYER) {
-							if (isSurrounderFirst) {
-								firstResult += 1;
-							}
-							points[x][y] = INNER_SECOND;
-						}
-						else {
-							points[x][y] = INNER;
-						}
-
-					}
-				}
-			}
-		}
-	}
+	
 };

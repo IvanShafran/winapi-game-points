@@ -19,8 +19,8 @@ struct DrawInfo {
 };
 
 struct GameInfo {
-	int widthGridNumber = 10;
-	int heightGridNumber = 10;
+	int widthGridNumber = 12;
+	int heightGridNumber = 12;
 	bool isFirstNextStep = true;
 };
 
