@@ -38,9 +38,14 @@ bool COverlappedWindow::Create(HINSTANCE instance)
 {
 	hInstance = instance;
 
+	wchar_t windowName[64];
+	if (::LoadString(instance, IDS_WINDOW_NAME, windowName, 64)) {
+		//pain
+	}
+
 	COverlappedWindow::handle = ::CreateWindowEx(0,
 		L"COverlappedWindow",
-		L"GamePoints",
+		windowName,
 		WS_OVERLAPPEDWINDOW&~WS_THICKFRAME&~WS_MAXIMIZEBOX,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
@@ -171,15 +176,21 @@ void COverlappedWindow::OnCreate(HWND handle) {
 	startNewGame();
 }
 
-bool COverlappedWindow::OnClose() {
-	if (!isDoneFirstStep) {
-		return true;
+bool COverlappedWindow::OnSaveDlg() {
+	wchar_t dlgQuestion[64];
+	wchar_t dlgName[64];
+	if (::LoadString(hInstance, IDS_SAVE_DLG_NAME, dlgName, 64)) {
+		//pain
+	}
+
+	if (::LoadString(hInstance, IDS_SAVE_DLG_Q, dlgQuestion, 64)) {
+		//pain
 	}
 
 	int msgboxID = MessageBox(
 		NULL,
-		(LPCWSTR)L"Сохранить игру?",
-		(LPCWSTR)L"Выход из игры",
+		dlgQuestion,
+		dlgName,
 		MB_ICONWARNING | MB_YESNOCANCEL | MB_DEFBUTTON3
 		);
 
@@ -200,6 +211,14 @@ bool COverlappedWindow::OnClose() {
 	}
 
 	return exit;
+}
+
+bool COverlappedWindow::OnClose() {
+	if (!isDoneFirstStep) {
+		return true;
+	}
+
+	return OnSaveDlg();
 }
 
 void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {

@@ -48,9 +48,9 @@ private:
 	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
 
 	bool OnClose();
-	
-	bool writeGameToFile();
+	bool COverlappedWindow::OnSaveDlg();
 
+	bool writeGameToFile();
 	void drawGame(HDC paintDC, const RECT& rect);
 	void drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state);
 	void drawGrid(HDC paintDC, const RECT& rect);

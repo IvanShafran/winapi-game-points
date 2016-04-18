@@ -236,8 +236,6 @@ public:
 	}
 
 	void updateInner() {
-
-
 		for (int x = 0; x < widthCount; ++x) {
 			for (int y = 0; y < heightCount; ++y) {
 				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER || points[x][y] == EMPTY) {
