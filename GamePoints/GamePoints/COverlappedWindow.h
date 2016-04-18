@@ -12,9 +12,9 @@ struct DrawInfo {
 	COLORREF firstPlayerColor = RGB(255, 0, 0);
 	COLORREF secondPlayerColor = RGB(0, 0, 255);
 	COLORREF playerPenColor = RGB(0, 0, 0);
-	COLORREF innerFirstColor = RGB(0, 0, 0);
-	COLORREF innerSecondColor = RGB(0, 0, 0);
-	COLORREF innerColor = RGB(0, 0, 0);
+	COLORREF innerFirstColor = RGB(127, 0, 0);
+	COLORREF innerSecondColor = RGB(0, 0, 127);
+	COLORREF innerColor = RGB(127, 127, 127);
 	COLORREF backgroundColor = RGB(255, 255, 255);
 };
 

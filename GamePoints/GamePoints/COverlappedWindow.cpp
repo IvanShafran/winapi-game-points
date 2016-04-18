@@ -139,6 +139,7 @@ void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
 			getGameInfo().isFirstNextStep = !getGameInfo().isFirstNextStep;
 			isDoneFirstStep = true;
 			game.buildGame();
+			game.updateInner();
 		}
 
 		::InvalidateRect(handle, 0, 0);
