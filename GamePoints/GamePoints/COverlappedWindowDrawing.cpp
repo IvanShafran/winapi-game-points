@@ -44,9 +44,11 @@ GameInfo& COverlappedWindow::getGameInfo() {
 void COverlappedWindow::drawGame(HDC paintDC, const RECT& rect) {
 	drawBackground(paintDC, rect);
 	drawGrid(paintDC, rect);
-	drawPoints(paintDC, rect);
-	drawScoreboard(paintDC, rect);
-	drawEdges(paintDC, rect);
+	if (!isCustomGameSettings) {
+		drawPoints(paintDC, rect);
+		drawScoreboard(paintDC, rect);
+		drawEdges(paintDC, rect);
+	}
 }
 
 void COverlappedWindow::drawBackground(HDC paintDC, const RECT& rect) {
@@ -157,7 +159,7 @@ void writeText(HDC paintDC, int fontSize, int x, int y, const std::wstring& str)
 void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
 
 	int indent = getDrawInfo().lineIndent;
-	int y = indent * (getGameInfo().heightGridNumber + 1) + getDrawInfo().scoreboardSize / 2;
+	int y = indent * (getGameInfo().heightGridNumber + 1) + getDrawInfo().scoreboardSize / 3;
 	int x = indent * (getGameInfo().widthGridNumber + 1) / 2;
 
 	int firstScore = 0;
@@ -171,7 +173,7 @@ void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
 		":" + std::to_string(secondScore) + " Second player";
 	std::wstring str = getWC(string.c_str());
 
-	writeText(paintDC, 30, x, y, str);
+	writeText(paintDC, getDrawInfo().scoreboardFont, x, y, str);
 }
 
 void COverlappedWindow::drawEdge(HDC paintDC, const RECT& rect, const Edge& e) {

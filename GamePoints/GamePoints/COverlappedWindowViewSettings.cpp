@@ -90,18 +90,21 @@ void COverlappedWindow::OnViewSettingsInit(HWND settingsHandle) {
 	HWND lineStrokeSlider = ::GetDlgItem(settingsHandle, IDC_SLIDER2);
 	HWND indentSlider = ::GetDlgItem(settingsHandle, IDC_SLIDER1);
 	HWND radiusSlider = ::GetDlgItem(settingsHandle, IDC_SLIDER3);
+	HWND fontSlider = ::GetDlgItem(settingsHandle, IDC_SLIDER4);
 
 	HWND checkBox = ::GetDlgItem(settingsHandle, IDC_CHECK1);
 
 	::SendMessage(indentSlider, TBM_SETRANGE, 1, MAKELONG(minSettings.lineIndent, maxSettings.lineIndent));
 	::SendMessage(lineStrokeSlider, TBM_SETRANGE, 1, MAKELONG(minSettings.lineStroke, maxSettings.lineStroke));
 	::SendMessage(radiusSlider, TBM_SETRANGE, 1, MAKELONG(minSettings.pointRadius, maxSettings.pointRadius));
+	::SendMessage(fontSlider, TBM_SETRANGE, 1, MAKELONG(minSettings.scoreboardFont, maxSettings.scoreboardFont));
 
 	::SendMessage(checkBox, BM_SETCHECK, isViewPreviewChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 
 	::SendMessage(indentSlider, TBM_SETPOS, 1, applyedDrawInfo.lineIndent);
 	::SendMessage(lineStrokeSlider, TBM_SETPOS, 1, applyedDrawInfo.lineStroke);
 	::SendMessage(radiusSlider, TBM_SETPOS, 1, applyedDrawInfo.pointRadius);
+	::SendMessage(fontSlider, TBM_SETPOS, 1, applyedDrawInfo.scoreboardFont);
 }
 
 void COverlappedWindow::OnViewSettingsOk(HWND settingsHandle) {
@@ -173,6 +176,7 @@ void COverlappedWindow::OnViewSettingsScroll(HWND settingsHandle) {
 	settingsDrawInfo.lineStroke = ::SendMessage(::GetDlgItem(settingsHandle, IDC_SLIDER2), TBM_GETPOS, 0, 0);
 	settingsDrawInfo.lineIndent = ::SendMessage(::GetDlgItem(settingsHandle, IDC_SLIDER1), TBM_GETPOS, 0, 0);
 	settingsDrawInfo.pointRadius = ::SendMessage(::GetDlgItem(settingsHandle, IDC_SLIDER3), TBM_GETPOS, 0, 0);
+	settingsDrawInfo.scoreboardFont = ::SendMessage(::GetDlgItem(settingsHandle, IDC_SLIDER4), TBM_GETPOS, 0, 0);
 
 	::InvalidateRect(handle, 0, 0);
 }

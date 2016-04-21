@@ -27,6 +27,9 @@
     <ClCompile Include="COverlappedWindowViewSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="COverlappedWindowCustomGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="COverlappedWindow.h">

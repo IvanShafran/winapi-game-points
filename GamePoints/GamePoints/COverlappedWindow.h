@@ -7,7 +7,8 @@ struct DrawInfo {
 	int lineStroke;
 	int lineIndent;
 	int pointRadius;
-	int scoreboardSize = 50;
+	int scoreboardSize = 60;
+	int scoreboardFont = 30;
 	COLORREF lineColor = RGB(0, 0, 0);
 	COLORREF firstPlayerColor = RGB(255, 0, 0);
 	COLORREF secondPlayerColor = RGB(0, 0, 255);
@@ -38,6 +39,7 @@ public:
 	HACCEL haccel;
 	HWND handle;
 	HWND viewSettingsHandle;
+	HWND customGameHandle;
 protected:
 	void OnCreate(HWND handle);
 	void OnDestroy();
@@ -59,6 +61,16 @@ private:
 	void OnViewSettingsScroll(HWND settingsHandle);
 	void OnViewSettingsCheck(HWND settingsHandle);
 
+	//custom game
+	static BOOL __stdcall customGameProc(HWND customGameHandle, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void OnCustomGame();
+	void OnCustomGameInit(HWND customGameHandle);
+	void OnCustomGameOk(HWND customGameHandle);
+	void OnCustomGameCancel(HWND customGameHandle);
+	void OnCustomGameScroll(HWND customGameHandle);
+	void OnCustomGameCheck(HWND customGameHandle);
+
 	//game
 	bool OnClose();
 	bool COverlappedWindow::OnSaveDlg();
@@ -78,6 +90,7 @@ private:
 	void startNewGame();
 	void setWindowSize();
 
+	bool isCustomGameSettings = false;
 	bool isGameStarted = false;
 	bool isDoneFirstStep = false;
 	bool isPause = false;

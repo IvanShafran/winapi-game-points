@@ -160,16 +160,18 @@ void COverlappedWindow::OnCreate(HWND handle) {
 	minSettings.lineStroke = 1;
 	minSettings.lineIndent = 10;
 	minSettings.pointRadius = 3;
+	minSettings.scoreboardFont = 10;
 
 	maxSettings.lineStroke = 10;
 	maxSettings.lineIndent = 100;
 	maxSettings.pointRadius = 15;
+	maxSettings.scoreboardFont = 40;
 
 	minGameInfo.heightGridNumber = 4;
 	minGameInfo.widthGridNumber = 4;
 
-	maxGameInfo.heightGridNumber = 50;
-	maxGameInfo.widthGridNumber = 50;
+	maxGameInfo.heightGridNumber = 40;
+	maxGameInfo.widthGridNumber = 100;
 
 	startNewGame();
 }
@@ -237,6 +239,12 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case ID_NEW_SMALL:
+		if (isDoneFirstStep) {
+			if (!OnSaveDlg()) {
+				break;
+			}
+		}
+
 		getGameInfo().heightGridNumber = 10;
 		getGameInfo().widthGridNumber = 10;
 		settingsGameInfo = applyedGameInfo;
@@ -244,6 +252,12 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 		startNewGame();
 		break;
 	case ID_NEW_MEDIUM:
+		if (isDoneFirstStep) {
+			if (!OnSaveDlg()) {
+				break;
+			}
+		}
+
 		getGameInfo().heightGridNumber = 12;
 		getGameInfo().widthGridNumber = 12;
 		settingsGameInfo = applyedGameInfo;
@@ -251,6 +265,12 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 		startNewGame();
 		break;
 	case ID_NEW_BIG:
+		if (isDoneFirstStep) {
+			if (!OnSaveDlg()) {
+				break;
+			}
+		}
+
 		getGameInfo().heightGridNumber = 15;
 		getGameInfo().widthGridNumber = 30;
 		settingsGameInfo = applyedGameInfo;
@@ -258,6 +278,16 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 		startNewGame();
 		break;
 	case ID_NEW_CUSTOM:
+		if (isDoneFirstStep) {
+			if (!OnSaveDlg()) {
+				break;
+			}
+		}
+
+		if (!isPause) {
+			OnCustomGame();
+			isPause = true;
+		}
 		break;
 	case ID_GAME_LOAD:
 		break;
