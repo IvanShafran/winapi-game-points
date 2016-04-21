@@ -30,6 +30,9 @@
     <ClCompile Include="COverlappedWindowCustomGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameSaving.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="COverlappedWindow.h">

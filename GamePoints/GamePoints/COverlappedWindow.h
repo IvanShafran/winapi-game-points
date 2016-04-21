@@ -77,7 +77,10 @@ private:
 	bool OnClose();
 	bool COverlappedWindow::OnSaveDlg();
 
-	bool writeGameToFile();
+	bool saveGame();
+	bool loadGame();
+	std::wstring getGameDescription(int* textLen);
+
 	void drawGame(HDC paintDC, const RECT& rect);
 	void drawPoint(HDC paintDC, const RECT& rect, int x_num, int y_num, PointState state);
 	void drawGrid(HDC paintDC, const RECT& rect);

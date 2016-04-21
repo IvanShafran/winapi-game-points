@@ -210,7 +210,7 @@ bool COverlappedWindow::OnSaveDlg() {
 	{
 	case IDYES:
 	{
-		exit = true;
+		exit = saveGame();
 		break;
 	}
 	case IDNO:
@@ -299,6 +299,7 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 	case ID_GAME_LOAD:
 		break;
 	case ID_GAME_SAVE:
+		saveGame();
 		break;
 	}
 }

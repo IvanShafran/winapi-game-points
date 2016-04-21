@@ -68,6 +68,7 @@
     <ClCompile Include="COverlappedWindowCustomGame.cpp" />
     <ClCompile Include="COverlappedWindowDrawing.cpp" />
     <ClCompile Include="COverlappedWindowViewSettings.cpp" />
+    <ClCompile Include="GameSaving.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
