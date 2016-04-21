@@ -108,6 +108,7 @@ void COverlappedWindow::OnViewSettingsOk(HWND settingsHandle) {
 	applyedDrawInfo = settingsDrawInfo;
 	::DestroyWindow(settingsHandle);
 	isPause = false;
+	isSettingsPreview = false;
 	::InvalidateRect(handle, 0, 0);
 }
 
@@ -115,6 +116,7 @@ void COverlappedWindow::OnViewSettingsCancel(HWND settingsHandle) {
 	settingsDrawInfo = applyedDrawInfo;
 	::DestroyWindow(settingsHandle);
 	isPause = false;
+	isSettingsPreview = false;
 	::InvalidateRect(handle, 0, 0);
 }
 

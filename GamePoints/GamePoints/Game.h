@@ -196,6 +196,36 @@ private:
 		}
 	}
 
+	void checkEdges() {
+		std::vector< Edge > checkedEdges;
+		for (int i = 0; i < edges.size(); ++i) {
+			Edge e = edges[i];
+			if (!(getState(e.end) == FIRST_PLAYER || getState(e.end) == SECOND_PLAYER) ||
+				!(getState(e.start) == FIRST_PLAYER || getState(e.start) == SECOND_PLAYER)) {
+				continue;
+			}
+
+			bool isClone = false;
+			for (int j = 0; j < edges.size() && !isClone; ++j) {
+				if (i == j) {
+					continue;
+				}
+
+				Edge checkedEdge = edges[j];
+				if ((e.start == checkedEdge.start && e.end == checkedEdge.end) || 
+					(e.start == checkedEdge.end && e.end == checkedEdge.start)) {
+					isClone = true;
+				}
+			}
+
+			if (!isClone) {
+				checkedEdges.push_back(e);
+			}
+		}
+
+		edges = checkedEdges;
+	}
+
 public:
 	Game() {}
 
@@ -267,6 +297,7 @@ public:
 		}
 
 		updateInner();
+		checkEdges();
 	}
 
 	

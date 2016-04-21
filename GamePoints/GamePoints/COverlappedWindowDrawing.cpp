@@ -146,7 +146,8 @@ std::wstring getWC(const char *c)
 
 void setFont(HDC paintDC, int fontSize) {
 	HFONT font = CreateFont(fontSize, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, L"SYSTEM_FIXED_FONT");
-	::DeleteObject(::SelectObject(paintDC, font));
+	::SelectObject(paintDC, font);
+	::DeleteObject(font);
 }
 
 void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
