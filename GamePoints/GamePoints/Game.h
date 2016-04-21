@@ -190,7 +190,7 @@ private:
 
 	void checkEdges() {
 		std::vector< Edge > checkedEdges;
-		for (int i = 0; i < edges.size(); ++i) {
+		for (size_t i = 0; i < edges.size(); ++i) {
 			Edge e = edges[i];
 			if (!(getState(e.end) == FIRST_PLAYER || getState(e.end) == SECOND_PLAYER) ||
 				!(getState(e.start) == FIRST_PLAYER || getState(e.start) == SECOND_PLAYER)) {
@@ -198,7 +198,7 @@ private:
 			}
 
 			bool isClone = false;
-			for (int j = 0; j < edges.size() && !isClone; ++j) {
+			for (size_t j = 0; j < edges.size() && !isClone; ++j) {
 				if (i == j) {
 					continue;
 				}
@@ -279,7 +279,7 @@ public:
 					bool wasPathFound = tryConsrtuctPath(Point(x, y), Point(x, y), RIGHT, newPath, inPath);
 
 					if (wasPathFound) {
-						for (int i = 0; i < newPath.size() - 1; ++i) {
+						for (size_t i = 0; i < newPath.size() - 1; ++i) {
 							Point point = newPath[i];
 							inPath[point.x][point.y] = true;
 							colors[point.x][point.y] = color;

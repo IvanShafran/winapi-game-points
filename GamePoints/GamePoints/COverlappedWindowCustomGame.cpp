@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <iostream>
 #include "resource.h"
+#include <string> 
 #include <Commctrl.h>
 
 void COverlappedWindow::OnCustomGame() {
@@ -71,6 +72,10 @@ void COverlappedWindow::OnCustomGameInit(HWND customGameHandle) {
 
 	::SendMessage(widthSlider, TBM_SETPOS, 1, applyedGameInfo.widthGridNumber);
 	::SendMessage(heightSlider, TBM_SETPOS, 1, applyedGameInfo.heightGridNumber);
+
+	showCustomNumbers(customGameHandle);
+
+	::InvalidateRect(customGameHandle, 0, 0);
 }
 
 void COverlappedWindow::OnCustomGameOk(HWND customGameHandle) {
@@ -92,10 +97,22 @@ void COverlappedWindow::OnCustomGameCancel(HWND customGameHandle) {
 	::InvalidateRect(handle, 0, 0);
 }
 
+void COverlappedWindow::showCustomNumbers(HWND customGameHandle) {
+	std::string string = std::to_string(settingsGameInfo.widthGridNumber);
+	std::wstring str = getWC(string.c_str());
+
+	::SendMessage(::GetDlgItem(customGameHandle, IDC_STATIC_W), WM_SETTEXT, 0, (LPARAM)str.c_str());
+
+	string = std::to_string(settingsGameInfo.heightGridNumber);
+	str = getWC(string.c_str());
+	::SendMessage(::GetDlgItem(customGameHandle, IDC_STATIC_H), WM_SETTEXT, 0, (LPARAM)str.c_str());
+}
+
 void COverlappedWindow::OnCustomGameScroll(HWND customGameHandle) {
 	settingsGameInfo.widthGridNumber = ::SendMessage(::GetDlgItem(customGameHandle, IDC_SLIDER1), TBM_GETPOS, 0, 0);
 	settingsGameInfo.heightGridNumber = ::SendMessage(::GetDlgItem(customGameHandle, IDC_SLIDER2), TBM_GETPOS, 0, 0);
 
+	showCustomNumbers(customGameHandle);
 	::InvalidateRect(handle, 0, 0);
 }
 

@@ -60,6 +60,7 @@ private:
 	void OnViewSettingsColor(HWND settingsHandle, UINT buttonID);
 	void OnViewSettingsScroll(HWND settingsHandle);
 	void OnViewSettingsCheck(HWND settingsHandle);
+	std::wstring getWC(const char *c);
 
 	//custom game
 	static BOOL __stdcall customGameProc(HWND customGameHandle, UINT message, WPARAM wParam, LPARAM lParam);
@@ -70,6 +71,7 @@ private:
 	void OnCustomGameCancel(HWND customGameHandle);
 	void OnCustomGameScroll(HWND customGameHandle);
 	void OnCustomGameCheck(HWND customGameHandle);
+	void COverlappedWindow::showCustomNumbers(HWND customGameHandle);
 
 	//game
 	bool OnClose();

@@ -137,7 +137,7 @@ void COverlappedWindow::drawPoints(HDC paintDC, const RECT& rect) {
 	}
 }
 
-std::wstring getWC(const char *c)
+std::wstring COverlappedWindow::getWC(const char *c)
 {
 	const size_t cSize = strlen(c) + 1;
 	std::wstring wc(cSize, L'#');
