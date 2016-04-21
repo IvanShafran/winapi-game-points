@@ -45,6 +45,7 @@ private:
 	int widthCount;
 	int heightCount;
 	std::vector< Edge > edges;
+	std::vector< std::vector<int> > colors;
 
 	int firstResult = 0;
 	int secondResult = 0;
@@ -133,12 +134,12 @@ private:
 		return (y >= start.y && y < finish.y) || (y < start.y && y >= finish.y);
 	}
 
-	bool isItInner(int x, int y, bool* isSurrounderFirst) {
+	bool isItInner(int x, int y, bool* isSurroundedByFirst, bool* isSurroundedBySecond) {
 		int intersectCountFirst = 0;
 		int intersectCountSecond = 0;
 
 		for (Edge e : edges) {
-			if (isIntersect(x, y, e.start, e.end)) {
+			if (isIntersect(x, y, e.start, e.end) && colors[e.start.x][e.start.y] != colors[x][y]) {
 				if (e.isFirstPlayer) {
 					intersectCountFirst += 1;
 				}
@@ -149,39 +150,30 @@ private:
 		}
 
 		if (intersectCountFirst % 2 == 1) {
-			if (inPath[x][y] && points[x][y] == FIRST_PLAYER) {
-				return false;
-			}
-
-			*isSurrounderFirst = true;
-			return true;
+			*isSurroundedByFirst = true;
 		}
-		else if (intersectCountSecond % 2 == 1) {
-			if (inPath[x][y] && points[x][y] == SECOND_PLAYER) {
-				return false;
-			}
-
-			*isSurrounderFirst = false;
-			return true;
+		
+		if (intersectCountSecond % 2 == 1) {
+			*isSurroundedBySecond = true;
 		}
 
-		return false;
+		return *isSurroundedByFirst || *isSurroundedBySecond;
 	}
 
 	void updateInner() {
 		for (int x = 0; x < widthCount; ++x) {
 			for (int y = 0; y < heightCount; ++y) {
 				if (points[x][y] == FIRST_PLAYER || points[x][y] == SECOND_PLAYER || points[x][y] == EMPTY) {
-					bool isSurrounderFirst;
-					if (isItInner(x, y, &isSurrounderFirst)) {
+					bool isSurroundedByFirst = false, isSurroundedBySecond = false;
+					if (isItInner(x, y, &isSurroundedByFirst, &isSurroundedBySecond)) {
 						if (points[x][y] == FIRST_PLAYER) {
-							if (!isSurrounderFirst) {
+							if (isSurroundedBySecond) {
 								secondResult += 1;
 							}
 							points[x][y] = INNER_FIRST;
 						}
 						else if (points[x][y] == SECOND_PLAYER) {
-							if (isSurrounderFirst) {
+							if (isSurroundedByFirst) {
 								firstResult += 1;
 							}
 							points[x][y] = INNER_SECOND;
@@ -275,6 +267,9 @@ public:
 		edges = std::vector< Edge >();
 		inPath = std::vector < std::vector<bool> >(widthCount,
 			std::vector<bool>(heightCount, false));
+		colors = std::vector< std::vector<int> >(widthCount,
+			std::vector<int>(heightCount, -1));
+		int color = 0;
 
 		for (int x = 0; x < widthCount; ++x) {
 			for (int y = 0; y < heightCount; ++y) {
@@ -287,10 +282,13 @@ public:
 						for (int i = 0; i < newPath.size() - 1; ++i) {
 							Point point = newPath[i];
 							inPath[point.x][point.y] = true;
+							colors[point.x][point.y] = color;
 
 							bool first = points[x][y] == FIRST_PLAYER;
 							edges.push_back(Edge(first, newPath[i], newPath[i + 1]));
 						}
+
+						++color;
 					}
 				}
 			}

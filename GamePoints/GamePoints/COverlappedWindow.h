@@ -87,6 +87,7 @@ private:
 	DrawInfo& getDrawInfo();
 	GameInfo& getGameInfo();
 	
+	void startNewGame(int width, int height);
 	void startNewGame();
 	void setWindowSize();
 

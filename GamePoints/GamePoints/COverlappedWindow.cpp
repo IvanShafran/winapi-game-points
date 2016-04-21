@@ -118,7 +118,17 @@ void COverlappedWindow::setWindowSize() {
 
 }
 
+void COverlappedWindow::startNewGame(int width, int height) {
+	getGameInfo().heightGridNumber = width;
+	getGameInfo().widthGridNumber = height;
+	settingsGameInfo = applyedGameInfo;
+	
+	startNewGame();
+}
+
 void COverlappedWindow::startNewGame() {
+	getGameInfo().isFirstNextStep = true;
+
 	setWindowSize();
 
 	game = Game(getGameInfo().widthGridNumber, getGameInfo().heightGridNumber);
@@ -151,6 +161,7 @@ void COverlappedWindow::OnLButtonDown(WPARAM wParam, LPARAM lParam) {
 
 void COverlappedWindow::OnCreate(HWND handle) {
 	this->handle = handle;
+	haccel = ::LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATOR1));
 
 	applyedDrawInfo.lineStroke = 2;
 	applyedDrawInfo.lineIndent = 35;
@@ -227,6 +238,14 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 	}
 
 	switch (LOWORD(wParam)) {
+	case ID_ACCELERATOR_FAST_QUIT:
+		::PostMessage(handle, WM_QUIT, (WPARAM)0, (LPARAM)0);
+		break;
+	case ID_ACCELERATOR_NEW_GAME:
+		if (!isPause) {
+			startNewGame();
+		}
+		break;
 	case ID_EXIT:
 		::PostMessage(handle, WM_CLOSE, (WPARAM)0, (LPARAM)0);
 		break;
@@ -245,11 +264,7 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 			}
 		}
 
-		getGameInfo().heightGridNumber = 10;
-		getGameInfo().widthGridNumber = 10;
-		settingsGameInfo = applyedGameInfo;
-		getGameInfo().isFirstNextStep = true;
-		startNewGame();
+		startNewGame(10, 10);
 		break;
 	case ID_NEW_MEDIUM:
 		if (isDoneFirstStep) {
@@ -258,11 +273,7 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 			}
 		}
 
-		getGameInfo().heightGridNumber = 12;
-		getGameInfo().widthGridNumber = 12;
-		settingsGameInfo = applyedGameInfo;
-		getGameInfo().isFirstNextStep = true;
-		startNewGame();
+		startNewGame(12, 12);
 		break;
 	case ID_NEW_BIG:
 		if (isDoneFirstStep) {
@@ -271,11 +282,7 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 			}
 		}
 
-		getGameInfo().heightGridNumber = 15;
-		getGameInfo().widthGridNumber = 30;
-		settingsGameInfo = applyedGameInfo;
-		getGameInfo().isFirstNextStep = true;
-		startNewGame();
+		startNewGame(30, 15);
 		break;
 	case ID_NEW_CUSTOM:
 		if (isDoneFirstStep) {
@@ -298,6 +305,7 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 
 void COverlappedWindow::OnDestroy()
 {
+	::DestroyAcceleratorTable(haccel);
 	::PostQuitMessage(0);
 }
 
