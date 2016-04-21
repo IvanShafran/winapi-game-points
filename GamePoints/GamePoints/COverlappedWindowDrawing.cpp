@@ -144,14 +144,17 @@ std::wstring getWC(const char *c)
 	return wc;
 }
 
-void setFont(HDC paintDC, int fontSize) {
+void writeText(HDC paintDC, int fontSize, int x, int y, const std::wstring& str) {
 	HFONT font = CreateFont(fontSize, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, L"SYSTEM_FIXED_FONT");
 	::SelectObject(paintDC, font);
+	
+	::SetTextAlign(paintDC, TA_CENTER);
+	::TextOut(paintDC, x, y, str.c_str(), str.size());
+	
 	::DeleteObject(font);
 }
 
 void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
-	setFont(paintDC, 30);
 
 	int indent = getDrawInfo().lineIndent;
 	int y = indent * (getGameInfo().heightGridNumber + 1) + getDrawInfo().scoreboardSize / 2;
@@ -168,8 +171,7 @@ void COverlappedWindow::drawScoreboard(HDC paintDC, const RECT& rect) {
 		":" + std::to_string(secondScore) + " Second player";
 	std::wstring str = getWC(string.c_str());
 
-	::SetTextAlign(paintDC, TA_CENTER);
-	::TextOut(paintDC, x, y, str.c_str(), str.size());
+	writeText(paintDC, 30, x, y, str);
 }
 
 void COverlappedWindow::drawEdge(HDC paintDC, const RECT& rect, const Edge& e) {
