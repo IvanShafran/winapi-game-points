@@ -297,9 +297,17 @@ void COverlappedWindow::OnCommand(WPARAM wParam, LPARAM lParam) {
 		}
 		break;
 	case ID_GAME_LOAD:
+		if (!loadGame()) {
+			//sad
+		} else {
+			::InvalidateRect(handle, 0, 0);
+		}
 		break;
 	case ID_GAME_SAVE:
-		saveGame();
+		if (saveGame()) {
+			isDoneFirstStep = false;
+		}
+
 		break;
 	}
 }

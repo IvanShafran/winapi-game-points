@@ -79,6 +79,7 @@ private:
 
 	bool saveGame();
 	bool loadGame();
+	bool COverlappedWindow::readGame(const wchar_t* filename);
 	std::wstring getGameDescription(int* textLen);
 
 	void drawGame(HDC paintDC, const RECT& rect);

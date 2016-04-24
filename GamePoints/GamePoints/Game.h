@@ -234,6 +234,14 @@ public:
 		return secondResult;
 	}
 
+	void setFirstResult(int result) {
+		firstResult = result;
+	}
+
+	void setSecondResult(int result) {
+		secondResult = result;
+	}
+
 	bool isInField(int x, int y) {
 		return !(x < 0 || x >= widthCount || y < 0 || y >= heightCount);
 	}
@@ -261,6 +269,14 @@ public:
 		} else {
 			return false;
 		}
+	}
+
+	void setPoint(int x, int y, PointState state) {
+		if (!isInField(x, y)) {
+			throw std::invalid_argument("Illegal arguments");
+		}
+
+		points[x][y] = state;
 	}
 
 	void buildGame() {
